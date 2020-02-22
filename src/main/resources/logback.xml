@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <property name="LOG_PATH" value="rutaservidor" />
+
+    <springProfile name="development">
+        <property name="LOG_PATH" value="rutaservidor" />
+    </springProfile>
+
+    <!-- Appender to log to console -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Appender to log to file -->
+    <appender name="flatfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/creditossbi.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/creditossbi_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <maxHistory>210</maxHistory>
+            <maxFileSize>5MB</maxFileSize> 
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.makerssolutions.studentslab" level="DEBUG" />
+
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="ch.qos.logback" level="ERROR" />
+    <logger name="org.hibernate" level="ERROR" />
+    <logger name="com.zaxxer.hikari" level="ERROR" />
+
+    <root level="ERROR">
+        <appender-ref ref="flatfile" />
+    </root>
+</configuration>
